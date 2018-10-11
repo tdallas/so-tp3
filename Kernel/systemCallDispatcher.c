@@ -76,8 +76,8 @@ static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8,
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	if(!isProcessRunningInForeground())
-		return 0;
+	// if(!isProcessRunningInForeground())
+	// 	return 0;
 	printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
 	return 1;
 }
