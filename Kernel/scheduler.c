@@ -9,10 +9,10 @@
 static void addProcess(process *p);
 static void setNextCurrent();
 
-/* Procesos actualmente bloqueados */
+// Procesos actualmente bloqueados 
 static blockedProcess *firstBlockedProcess;
 
-/* Proceso actualmente corriendo */
+// Proceso actualmente corriendo 
 static nodeList *current = NULL;
 static nodeList *prev = NULL;
 
@@ -20,13 +20,16 @@ process *getCurrentProcess()
 {
 	return current->p;
 }
-
+v
 uint64_t nextProcess(uint64_t current_rsp)
 {
+
 	if (current == NULL)
 	{
 		return current_rsp;
 	}
+
+	
 
 	decreaseQuantum();
 
@@ -47,6 +50,8 @@ uint64_t nextProcess(uint64_t current_rsp)
 
 uint64_t runProcess(process *new_process)
 {
+	
+
 	int pid;
 
 	addProcess(new_process);
@@ -99,8 +104,78 @@ void yieldProcess()
 	_yieldProcess();
 }
 
+
+
+
+
+
+
+int counter = 0;
+int priorityHandeling = 1;
+int processes = 0;
+
+static void handlePriority()
+{
+
+	if (processes != getProcessesNumber()){
+		
+		processes = getProcessesNumber();
+		priorityHandeling = 1;
+	}	
+
+	if( current->p->priority == priorityHandeling){
+		return;
+	}
+	else{
+		current->p->starvation++;
+		
+		if (current->p->starvation <=50){
+		prev = current;
+		current = current->next;
+		}
+		else{
+			//printString("STARVATION", 0, 155, 255);
+			//printString(current->p->name, 0, 155, 255);
+			current->p->starvation = 0;
+			counter++;
+	
+			if ( processes <= counter){
+				if (priorityHandeling  != 3){
+					priorityHandeling++;
+					counter = 0;
+				}
+			}
+			return;
+		}
+	}
+
+	counter++;
+	
+
+	if ( processes <= counter){
+		if (priorityHandeling  != 3){
+			priorityHandeling++;
+			counter = 0;
+		}
+		
+
+
+	}
+
+	setNextCurrent();
+
+}
+
+
+
+
+
+
+
 static void setNextCurrent()
 {
+
+
 	while (isProcessBlocked(current->p) || isProcessDeleted(current->p))
 	{
 		nodeList *next = current->next;
@@ -116,6 +191,8 @@ static void setNextCurrent()
 
 		current = next;
 	}
+
+	handlePriority();
 }
 
 void printBlockedProcessesList()
