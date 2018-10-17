@@ -19,6 +19,8 @@ typedef struct
 {
   char status;
   char name[MAX_PROCESS_NAME];
+  uint64_t priority;
+  uint64_t starvation;
   uint64_t rsp;
   uint64_t stackPage;
   uint64_t dataPageCount;
