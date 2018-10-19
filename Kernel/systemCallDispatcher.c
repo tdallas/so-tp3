@@ -7,6 +7,7 @@
 #include <processes.h>
 #include <scheduler.h>
 #include <mutex.h>
+#include <pipesADT.h>
 
 static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
@@ -30,6 +31,10 @@ static uint64_t _mutexUnlock(uint64_t mutex, uint64_t rdx, uint64_t rcx, uint64_
 static uint64_t _mutexLock(uint64_t mutex, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _getPid(uint64_t mutex, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _mutexClose(uint64_t mutex, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t _sendMessagePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t _receiveMessagePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t _deletePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 
 
 static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9) = {_getTime,                         //0
@@ -53,7 +58,11 @@ static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64
 																										 _mutexLock, //18
 																										 _setProcessForeground, //19
 																										 _getPid, //20
-																										 _mutexClose //21
+																										 _mutexClose, //21
+																										 _newPipe, //22
+																										 _sendMessagePipe, //23
+																										 _receiveMessagePipe, //24
+																										 _deletePipe //25
 																									   };
 
 
@@ -186,4 +195,23 @@ static uint64_t _mutexClose(uint64_t mutex, uint64_t rdx, uint64_t rcx, uint64_t
 static uint64_t _getPid(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
 	process * p = getCurrentProcess();
 	return getProcessPid(p);
+}
+
+static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
+	return (uint64_t)newPipe();
+}
+
+static uint64_t _sendMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
+	sendMessagePipe((pipeADT)pipe, (char*)msg, length);
+	return 1;
+}
+
+static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
+	receiveMessagePipe((pipeADT)pipe, (char*)msg, length);
+	return 1;
+}
+
+static uint64_t _deletePipe(uint64_t pipe, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
+	deletePipe((pipeADT)pipe);
+	return 1;
 }

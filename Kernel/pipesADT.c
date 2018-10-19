@@ -1,28 +1,34 @@
 #include <messageQueueADT.h>
+#include <mutex.h>
+#include <pipesADT.h>
 
-struct messageNode{
-  struct messageNode * tail;
-  struct messageNode * head;
-  struct msg * message;
-};
 
-struct pipeListHeader{
-  mutexADT mutex;
-  struct pipeNode * first;
-}
 
 
 struct pipeNode{
-  struct pipeNode * tail;
 
-  messageQueueADT messageList;
-  uint64_t inId;
-  uint64_t outId;
+  messageQueueADT messageQueue;
+
+};
+
+
+
+pipeADT newPipe(){
+  struct pipeNode *newNode = malloc(sizeof(struct pipeNode));
+
+  newNode->messageQueue = newMessageQueue();
+  return newNode;
 }
 
-struct pipeHeader pipeList;
+void sendMessagePipe(pipeADT pipe, char * text, int length){
+  sendMessage(pipe->messageQueue, 0, text, length);
+}
 
+void receiveMessagePipe(pipeADT pipe, char * dest, int length){
+  receiveMessage(pipe->messageQueue, 0, dest, length);
+}
 
-pipeADT newPipe(int fd[2]){
-
+void deletePipe(pipeADT pipe){
+  deleteMessageQueue(pipe->messageQueue);
+  free(pipe);
 }

@@ -106,7 +106,7 @@ void unblockProcesses(messageQueueADT queue, int category, int length){
 
 //public
 
-messageQueueADT newMessageQueue(int category){
+messageQueueADT newMessageQueue(){
   struct queueHeader* newQueue = malloc(sizeof(struct queueHeader));
   newQueue->mutex = mutexInit("");
 

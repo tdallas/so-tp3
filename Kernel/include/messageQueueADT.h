@@ -5,10 +5,12 @@
 
 typedef struct queueHeader * messageQueueADT;
 
-messageQueueADT newMessageQueue(int pid);
+messageQueueADT newMessageQueue();
 
 void sendMessage(messageQueueADT queue, int pid, char* text, int length);
 
 void receiveMessage(messageQueueADT queue, int pid, char* dest, int length);
+
+void deleteMessageQueue(messageQueueADT queue);
 
 #endif
