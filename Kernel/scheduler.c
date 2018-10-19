@@ -37,10 +37,17 @@ uint64_t nextProcess(uint64_t current_rsp)
 
 	setProcessRsp(current->p, current_rsp);
 
+	if(current->p->status == RUNNING){
+		current->p->status = READY;
+	}
+
 	prev = current;
 	current = current->next;
 
+
 	setNextCurrent();
+
+	current->p->status = RUNNING;
 
 	return getProcessRsp(current->p);
 }
@@ -116,6 +123,7 @@ static void setNextCurrent()
 
 		current = next;
 	}
+
 }
 
 void printBlockedProcessesList()

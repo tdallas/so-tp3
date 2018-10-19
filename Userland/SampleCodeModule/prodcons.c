@@ -94,6 +94,7 @@ void killLastProducer(){
 
 void prodcons(){
   mutex = mutexInit("prodcons");
+  
   printf("::: Prodcons :::\n");
   printf("'c'/'x' to add/remove consumer, 'p'/'o' to add/remove producer and 'q' to quit.\n\n");
   char c;

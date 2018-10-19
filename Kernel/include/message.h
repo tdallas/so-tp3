@@ -2,7 +2,7 @@
 #define MESSAGE_H
 
 struct msg{
-  int pid;
+  int category;
   char * msg;
   int length;
 };

@@ -5,7 +5,7 @@
 #include "scheduler.h"
 #include "videoDriver.h"
 
-static mutexADT *mutex;
+static mutexADT mutex[255];
 static int id = 0;
 static int numberOfMutexes = 0;
 
@@ -19,12 +19,13 @@ typedef struct mutex_t
 
 mutex_t *mutexInit(char *name)
 {
-	int i;
-	for (i = 0; i < numberOfMutexes; i++)
-	{
-		if (strcmpKernel(name, mutex[i]->name) == 0)
+	if((*name)!=0){
+		for (int i = 0; i < numberOfMutexes; i++)
 		{
-			return mutex[i];
+			if (strcmpKernel(name, mutex[i]->name) == 0)
+			{
+				return mutex[i];
+			}
 		}
 	}
 	mutexADT newMutex = (mutexADT)malloc(sizeof(mutex_t));
@@ -39,8 +40,9 @@ mutex_t *mutexInit(char *name)
 
 	id++;
 	numberOfMutexes++;
-	mutex = (mutexADT *)malloc(numberOfMutexes * sizeof(mutexADT));
+	//mutex = (mutexADT *)malloc(numberOfMutexes * sizeof(mutexADT));
 	mutex[numberOfMutexes - 1] = newMutex;
+
 	return newMutex;
 }
 
@@ -54,16 +56,19 @@ int mutexLock(mutex_t *mut)
 		yieldProcess();
 	}
 	mut->value = 0;
+
 	return 0;
 }
 
 int mutexUnlock(mutex_t *mut)
 {
+
 	for(int i = 0; i < MAX_PROCESSES; i++){
 		unblockProcess(mut->blockedProcesses[i]);
 	}
 	mut->value = 1;
 	yieldProcess();
+
 	return mut->value;
 }
 
@@ -105,7 +110,7 @@ void closeAllMutex()
 	}
 }
 
-void freeMutexList()
-{
-	free(mutex);
-}
+// void freeMutexList()
+// {
+// 	free(mutex);
+// }

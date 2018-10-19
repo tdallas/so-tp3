@@ -37,5 +37,4 @@ int getPid(){
 
 void printPids() {
 	systemCall(15,0,0,0,0,0);
-	exitProcess();
 }
