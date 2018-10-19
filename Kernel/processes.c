@@ -40,10 +40,14 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
 {
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
-  newProcess->stackPage = getStackPage();
+  printString("PROCESO VA BIEN 43 \n",255,255,255);
+  // newProcess->stackPage = getStackPage();
   newProcess->status = READY;
-  newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
+  printString("PROCESO VA BIEN 46 \n",255,255,255);
+  // newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
+  printString("PROCESO VA BIEN 48\n",255,255,255);
   setNullAllProcessPages(newProcess);
+  printString("PROCESO VA BIEN 50\n",255,255,255);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
 
@@ -57,7 +61,7 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
     foreground = newProcess;
     newProcess->ppid = 0;
   }
-
+  printString("PROCESO VA BIEN \n",255,255,255);
   return newProcess;
 }
 

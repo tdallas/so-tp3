@@ -49,7 +49,7 @@ int main()
 	load_idt();
 	speakerBeep();
 	printBackGround();
-	initializePageAllocator();
+	// initializePageAllocator();
 
 	process *shell = createProcess((uint64_t)sampleCodeModuleAddress, 0,0, "shell");
 	setProcessForeground(shell->pid);
