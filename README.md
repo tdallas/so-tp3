@@ -1,4 +1,4 @@
-# SO - TP2
+# SO - TP3
 System based in x64BareBones for the architecture Intel 64.
 
 ## To run the proyect:
@@ -34,8 +34,4 @@ From the directory repository:
 ## From the system run the following command:
 ```
 help
-```
-
-## Collaborators
-* Dorado, Tomas
-* Dallas, Tomas
+``
