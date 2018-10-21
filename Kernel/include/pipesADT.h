@@ -1,15 +1,14 @@
 #ifndef PIPES_H
 #define PIPES_H
 
-typedef struct pipeNode * pipeADT;
 
-pipeADT newPipe();
+messageQueueADT newPipe();
 
-void sendMessagePipe(pipeADT pipe, char * text, int length);
+void sendMessagePipe(messageQueueADT pipe, char * text, int length);
 
-void receiveMessagePipe(pipeADT pipe, char * dest, int length);
+void receiveMessagePipe(messageQueueADT pipe, char * dest, int length);
 
-void deletePipe(pipeADT pipe);
+void deletePipe(messageQueueADT pipe);
 
 
 #endif

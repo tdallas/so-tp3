@@ -2,7 +2,7 @@
 
 
 int newPipe(){
-  return (int)systemCall(22,0,0,0,0,0);
+  return (uint64_t)systemCall(22,0,0,0,0,0);
 }
 
 void sendMessagePipe(int pipe, char* msg, int length){

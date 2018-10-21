@@ -8,11 +8,12 @@
 void pipetest1Proc(int argc, char**argv);
 
 void pipetest1(){
-  int processes = 7;
+  int pipe = newPipe();
+  int processes = 4;
   printf("Running %d processes.\n", processes);
-  int p1 = getPid();
+
   int * parameter = malloc(sizeof(int));
-  *parameter = p1;
+  *parameter = pipe;
 
   int processesPids[processes];
   for(int i=0; i< processes; i++){
@@ -20,12 +21,12 @@ void pipetest1(){
   }
 
 
-  char *pipe = "holaaa\n";
-
-  printf("Sending: %s\n", pipe);
+  char *msg = "holaaa\n";
+  printf("Pipe: %d\n", pipe);
+  printf("Sending: %s\n", msg);
   for(int i=0; i< processes; i++){
 
-    sendMessagePipe(processesPids[i], pipe, strlenUserland(pipe));
+    sendMessagePipe(pipe, msg, strlenUserland(pipe));
 
   }
 
@@ -34,15 +35,15 @@ void pipetest1(){
 void pipetest1Proc(int argc, char**argv){
   int **p1_pointer = ((void**)argv);
   int p1 = **p1_pointer;
-  char pipe[BUFFERSIZE+1];
+  char msg[BUFFERSIZE+1];
   int index=6;
+  printf("Pipe: %d\n", p1);
+  receiveMessagePipe(p1, msg, index);
 
-  receive(p1, pipe, index);
 
+  msg[index]=0;
 
-  pipe[index]=0;
-
-  printf("Proceso %d: %s\n", getPid(), pipe);
+  printf("Proceso %d: %s\n", getPid(), msg);
   exitProcess();
 }
 

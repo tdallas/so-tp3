@@ -202,16 +202,16 @@ static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 }
 
 static uint64_t _sendMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	sendMessagePipe((pipeADT)pipe, (char*)msg, length);
+	sendMessagePipe((messageQueueADT)pipe, (char*)msg, length);
 	return 1;
 }
 
 static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	receiveMessagePipe((pipeADT)pipe, (char*)msg, length);
+	receiveMessagePipe((messageQueueADT)pipe, (char*)msg, length);
 	return 1;
 }
 
 static uint64_t _deletePipe(uint64_t pipe, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
-	deletePipe((pipeADT)pipe);
+	deletePipe((messageQueueADT)pipe);
 	return 1;
 }

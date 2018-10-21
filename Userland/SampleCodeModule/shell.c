@@ -5,6 +5,7 @@
 #include <prodcons.h>
 #include <mutexTest.h>
 #include <printPidsProc.h>
+#include <pipeTest.h>
 
 static char choice[BUFFER_SIZE];
 
@@ -27,6 +28,7 @@ static instruction commands[] = {
 		{"exceptionOpCode\n", opCode},
 		{"messageTest\n", messageTest},
 		{"mutexTest\n", mutexTest},
+		{"pipeTest\n", pipeTest},
 		{"printPids\n", printPidsProc},
 		{"prodcons\n", prodcons}
 	};
