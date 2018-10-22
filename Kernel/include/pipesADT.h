@@ -1,14 +1,15 @@
 #ifndef PIPES_H
 #define PIPES_H
 
+typedef messageQueueADT pipeADT;
 
-messageQueueADT newPipe();
+pipeADT newPipe();
 
-void sendMessagePipe(messageQueueADT pipe, char * text, int length);
+void sendMessagePipe(pipeADT pipe, char * text, int length);
 
-void receiveMessagePipe(messageQueueADT pipe, char * dest, int length);
+void receiveMessagePipe(pipeADT pipe, char * dest, int length);
 
-void deletePipe(messageQueueADT pipe);
+void deletePipe(pipeADT pipe);
 
 
 #endif

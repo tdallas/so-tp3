@@ -4,23 +4,21 @@
 
 
 
-messageQueueADT newPipe(){
+pipeADT newPipe(){
   return newMessageQueue();
 }
 
-void sendMessagePipe(messageQueueADT messageQueue, char * text, int length){
-  printString("Enviando mensaje.\n", 200, 200, 200);
-  sendMessage(messageQueue, 0, text, length);
+void sendMessagePipe(pipeADT messageQueue, char * text, int length){
+
+  sendMessage((messageQueueADT)messageQueue, 0, text, length);
 }
 
-void receiveMessagePipe(messageQueueADT messageQueue, char * dest, int length){
-  	printString("Pidiendo mensaje: ", 200, 200, 200);
-    printDec(messageQueue);
-    printString("\n", 200, 200, 200);
-  receiveMessage(messageQueue, 0, dest, length);
-  printString("Mensaje recibido.\n", 200, 200, 200);
+void receiveMessagePipe(pipeADT messageQueue, char * dest, int length){
+
+  receiveMessage((messageQueueADT)messageQueue, 0, dest, length);
+
 }
 
-void deletePipe(messageQueueADT messageQueue){
-  deleteMessageQueue(messageQueue);
+void deletePipe(pipeADT messageQueue){
+  deleteMessageQueue((messageQueueADT)messageQueue);
 }
