@@ -61,7 +61,9 @@ struct messageNode * searchMessageR(struct messageNode* curr, messageQueueADT qu
 
     }else{
       memcpy(dest, curr->message->msg, length);
-      memcpy(curr->message->msg, curr->message->msg+length, curr->message->length-length);
+      for(int i=0; i < curr->message->length-length; i++){
+        curr->message->msg[i]=curr->message->msg[i+length];
+      }
       curr->message->length -= length;
       return curr;
     }
@@ -77,6 +79,8 @@ struct messageNode * searchMessageR(struct messageNode* curr, messageQueueADT qu
 
 void searchMessage(messageQueueADT queue, int category, int length, char* dest){
   queue->first = searchMessageR(queue->first, queue,  NULL, category, length, dest);
+  if(queue->first == NULL)
+    queue->last = NULL;
 }
 
 void unblockProcesses(messageQueueADT queue, int category, int length){
