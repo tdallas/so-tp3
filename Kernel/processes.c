@@ -100,8 +100,7 @@ void removeProcess(process *p)
     processesTable[p->pid] = NULL;
     free((void *)p->stackPage);
     free((void *)p);
-    free((void *)p->messageQueue);
-
+    deleteMessageQueue(p->messageQueue);
   }
 }
 
@@ -196,6 +195,7 @@ void blockProcess(process *p)
   if (p != NULL && p->status != DELETE)
   {
     p->status = BLOCKED;
+
   }
 }
 

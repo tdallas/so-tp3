@@ -3,12 +3,15 @@
 #include <stdio.h>
 #include <exitProcess.h>
 #include <prodcons.h>
+#include <mutexTest.h>
+#include <printPidsProc.h>
+#include <pipeTest.h>
 
 static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 14
+#define CMD_SIZE 15
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -24,7 +27,9 @@ static instruction commands[] = {
 		{"exit\n", exitProcess},
 		{"exceptionOpCode\n", opCode},
 		{"messageTest\n", messageTest},
-		{"printPids\n", printPids},
+		{"mutexTest\n", mutexTest},
+		{"pipeTest\n", pipeTest},
+		{"printPids\n", printPidsProc},
 		{"prodcons\n", prodcons}
 	};
 
