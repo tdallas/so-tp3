@@ -17,7 +17,7 @@
  * The minimum allocation size is 16 bytes because we have an 8-byte header and
  * we need to stay 8-byte aligned.
  */
-#define MIN_ALLOC_LOG2 4
+#define MIN_ALLOC_LOG2 12
 #define MIN_ALLOC ((size_t)1 << MIN_ALLOC_LOG2)
 
 /*

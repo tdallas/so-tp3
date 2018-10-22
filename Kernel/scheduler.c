@@ -20,7 +20,7 @@ process *getCurrentProcess()
 {
 	return current->p;
 }
-v
+
 uint64_t nextProcess(uint64_t current_rsp)
 {
 

@@ -5,7 +5,7 @@
 void *malloc(uint64_t size)
 {
 	void * ret = myMalloc(size);
-	printString("VA BIEN");
+	printString("VA BIEN\n");
 	return ret;
 }
 
