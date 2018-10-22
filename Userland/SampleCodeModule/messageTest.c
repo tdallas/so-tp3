@@ -5,7 +5,7 @@
 
 #include <shell.h>
 
-void msgtest1Proc(int argc, char**argv);
+void msgtest1Proc(int argc, void**argv);
 
 void msgtest1(){
   int processes = 7;
@@ -16,7 +16,7 @@ void msgtest1(){
 
   int processesPids[processes];
   for(int i=0; i< processes; i++){
-    processesPids[i] = execProcess(msgtest1Proc, 1, &parameter, "hijo", 0);
+    processesPids[i] = execProcess(msgtest1Proc, 1, (char**)&parameter, "hijo", 0);
   }
 
 
@@ -31,8 +31,8 @@ void msgtest1(){
 
 }
 
-void msgtest1Proc(int argc, char**argv){
-  int **p1_pointer = ((void**)argv);
+void msgtest1Proc(int argc, void**argv){
+  int **p1_pointer = (argv);
   int p1 = **p1_pointer;
   char msg[BUFFERSIZE+1];
   int index=6;
