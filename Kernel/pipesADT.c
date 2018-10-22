@@ -1,7 +1,7 @@
 #include <messageQueueADT.h>
 #include <mutex.h>
 #include <videoDriver.h>
-
+#include <pipesADT.h>
 
 
 pipeADT newPipe(){
