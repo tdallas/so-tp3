@@ -42,7 +42,7 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   strcpyKernel(newProcess->name, name);
   newProcess->priority = 1;
   newProcess->starvation = 0;
-  newProcess->stackPage = getStackPage();
+  newProcess->stackPage = (uint64_t)malloc(0x100000);
   newProcess->status = READY;
   newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
   setNullAllProcessPages(newProcess);
@@ -63,33 +63,6 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   return newProcess;
 }
 
-/*
-
-process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name, uint64_t priorityLevel)
-{
-  process *newProcess = (process *)malloc(sizeof(*newProcess));
-  strcpyKernel(newProcess->name, name);
-  newProcess->priority = priorityLevel;
-  newProcess->stackPage = getStackPage();
-  newProcess->status = READY;
-  newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
-  setNullAllProcessPages(newProcess);
-  insertProcess(newProcess);
-  newProcess->messageQueue = newMessageQueue(newProcess->pid);
-
-  if (newProcess->pid != 0)
-  {
-    newProcess->ppid = getProcessPid(getCurrentProcess());
-  }
-  else
-  {
-    // Pone en foreground al primer proceso 
-    foreground = newProcess;
-    newProcess->ppid = 0;
-  }
-
-  return newProcess;
-}
 
 process *getProcessByPid(uint64_t pid)
 {
