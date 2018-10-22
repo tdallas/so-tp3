@@ -5,7 +5,6 @@
 void *malloc(uint64_t size)
 {
 	void * ret = myMalloc(size);
-	printString("VA BIEN\n");
 	return ret;
 }
 
@@ -13,8 +12,6 @@ void free(void *page)
 {
 	myFree(page);
 }
-
-
 
 void *memcpy(void *destination, const void *source, uint64_t length)
 {

@@ -86,7 +86,6 @@ void searchMessage(messageQueueADT queue, int category, int length, char* dest){
 void unblockProcesses(messageQueueADT queue, int category, int length){
   struct blockedProcessNode* curr = queue->blockedProcesses;
   while(curr != NULL){
-    //printString("holaa mundo\n",200, 200, 255);
     if( (category == -1) || (curr->waitingCategory == category && isMessageAvailable(queue->first, category, curr->messageSize - length) )){
       //*** Unblock process ***
       process *p = getProcessByPid(curr->processPid);

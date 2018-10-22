@@ -1,6 +1,5 @@
 #include "include/lib.h"
 #include "include/scheduler.h"
-//#include "include/videoDriver.h"
 #include "include/mutex.h"
 #include "include/processes.h"
 #include "include/defs.h"
@@ -29,8 +28,6 @@ uint64_t nextProcess(uint64_t current_rsp)
 		return current_rsp;
 	}
 
-
-
 	decreaseQuantum();
 
 	if (current->quantum > 0)
@@ -47,7 +44,6 @@ uint64_t nextProcess(uint64_t current_rsp)
 	prev = current;
 	current = current->next;
 
-
 	setNextCurrent();
 
 	current->p->status = RUNNING;
@@ -57,8 +53,6 @@ uint64_t nextProcess(uint64_t current_rsp)
 
 uint64_t runProcess(process *new_process)
 {
-
-
 	int pid;
 
 	addProcess(new_process);
@@ -103,7 +97,6 @@ void killProcess()
 	_changeProcess(getProcessRsp(current->p));
 }
 
-
 void yieldProcess()
 {
 	current->next->quantum += 1;
@@ -111,19 +104,12 @@ void yieldProcess()
 	_yieldProcess();
 }
 
-
-
-
-
-
-
 int counter = 0;
 int priorityHandeling = 1;
 int processes = 0;
 
 static void handlePriority()
 {
-
 	if (processes != getProcessesNumber()){
 
 		processes = getProcessesNumber();
@@ -141,11 +127,8 @@ static void handlePriority()
 		current = current->next;
 		}
 		else{
-			//printString("STARVATION", 0, 155, 255);
-			//printString(current->p->name, 0, 155, 255);
 			current->p->starvation = 0;
 			counter++;
-
 			if ( processes <= counter){
 				if (priorityHandeling  != 3){
 					priorityHandeling++;
@@ -158,31 +141,18 @@ static void handlePriority()
 
 	counter++;
 
-
 	if ( processes <= counter){
 		if (priorityHandeling  != 3){
 			priorityHandeling++;
 			counter = 0;
 		}
-
-
-
 	}
 
 	setNextCurrent();
-
 }
-
-
-
-
-
-
 
 static void setNextCurrent()
 {
-
-
 	while (isProcessBlocked(current->p) || isProcessDeleted(current->p))
 	{
 		nodeList *next = current->next;
@@ -240,7 +210,6 @@ void unblock(queueADT queue)
 		{
 			unblock(queue);
 		}
-
 		unblockProcess(current->p);
 		addProcess(current->p);
 	}

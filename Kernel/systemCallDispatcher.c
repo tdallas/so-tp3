@@ -212,7 +212,6 @@ static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length
 	// printString("\nPipe:", 100, 100, 255);
 	// printDec(pipe);
 	receiveMessagePipe((pipeADT)pipe, (char*)msg, length);
-	//printString("\nNo murioo:", 100, 100, 255);
 	return 1;
 }
 

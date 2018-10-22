@@ -11,7 +11,7 @@ static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 15
+#define CMD_SIZE 16
 
 static int isRunning = 1;
 static instruction commands[] = {
