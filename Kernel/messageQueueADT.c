@@ -3,8 +3,8 @@
 #include "include/processes.h"
 #include "include/lib.h"
 #include "include/scheduler.h"
-#include <videoDriver.h>
-#include <mutex.h>
+//#include <videoDriver.h>
+#include "include/mutex.h"
 
 
 struct queueHeader{
@@ -177,7 +177,8 @@ void receiveMessage(messageQueueADT queue, int category, char* dest, int length)
     newBlockedProcess->processPid =  getProcessPid(p);
     newBlockedProcess->head = NULL;
     newBlockedProcess->tail = queue->blockedProcesses;
-    queue->blockedProcesses->tail = newBlockedProcess;
+    if(queue->blockedProcesses != NULL)
+      queue->blockedProcesses->tail = newBlockedProcess;
     queue->blockedProcesses = newBlockedProcess;
 
     blockProcess(p);

@@ -26,7 +26,7 @@ void pipetest1(){
   printf("Sending: %s\n", msg);
   for(int i=0; i< processes; i++){
 
-    sendMessagePipe(pipe, msg, strlenUserland(pipe));
+    sendMessagePipe(pipe, msg, 7);
 
   }
 
@@ -35,11 +35,10 @@ void pipetest1(){
 void pipetest1Proc(int argc, char**argv){
   int **p1_pointer = ((void**)argv);
   int p1 = **p1_pointer;
-  char msg[BUFFERSIZE+1];
-  int index=6;
+  char msg[8];
+  int index=7;
   printf("Pipe: %d\n", p1);
   receiveMessagePipe(p1, msg, index);
-
 
   msg[index]=0;
 

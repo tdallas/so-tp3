@@ -1,10 +1,10 @@
-#include "lib.h"
-#include "scheduler.h"
-#include "videoDriver.h"
-#include "mutex.h"
-#include "processes.h"
-#include "defs.h"
-#include "interrupts.h"
+#include "include/lib.h"
+#include "include/scheduler.h"
+//#include "include/videoDriver.h"
+#include "include/mutex.h"
+#include "include/processes.h"
+#include "include/defs.h"
+#include "include/interrupts.h"
 
 static void addProcess(process *p);
 static void setNextCurrent();

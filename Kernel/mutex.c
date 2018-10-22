@@ -1,9 +1,9 @@
-#include <stdint.h>
-#include "mutex.h"
-#include "lib.h"
-#include "processes.h"
-#include "scheduler.h"
-#include "videoDriver.h"
+//#include "include/stdint.h"
+#include "include/mutex.h"
+#include "include/lib.h"
+#include "include/processes.h"
+#include "include/scheduler.h"
+//#include "include/videoDriver.h"
 
 static mutexADT mutex[255];
 static int id = 0;
