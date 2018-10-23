@@ -16,6 +16,7 @@ void test5();
 void test6();
 void test7();
 void test8();
+void test9();
 
 int main(){
   test1();
@@ -27,6 +28,7 @@ int main(){
   test7();
   printf("\nFin\n");
   test8();
+  test9();
 }
 
 void test1(){
@@ -99,19 +101,22 @@ void test4(){
   char response1[6];
   response1[5]=0;
   receiveMessagePipe(pipe, response1, 5);
+  printf("%s\n", response1);
   assert(strcmp("hola ", response1) == 0);
 
   char * msg2 = "pepe.";
   sendMessagePipe(pipe, msg2, strlen(msg2));
 
-  char response2[5];
-    response2[5]=0;
+  char response2[6];
+  response2[5]=0;
   receiveMessagePipe(pipe, response2, 5);
+  printf("%s\n", response2);
   assert(strcmp("como ", response2) == 0);
 
   char response3[7];
     response3[6]=0;
   receiveMessagePipe(pipe, response3, 6);
+  printf("%s\n", response3);
   assert(strcmp("andas.", response3) == 0);
 
   char response4[5];
@@ -223,4 +228,25 @@ void test8(){
 
   deletePipe(pipe);
 
+}
+
+void test9(){
+  pipeADT pipe = newPipe();
+
+  char * msg1 = "hola como andas.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+
+  for(int i=0; i<strlen(msg1);i++){
+    sendMessagePipe(pipe, &msg1[i], 1);
+  }
+
+  char response;
+  while(*msg1 != 0){
+    receiveMessagePipe(pipe, &response, 1);
+    assert(*msg1 == response);
+    msg1++;
+  }
+
+
+  deletePipe(pipe);
 }

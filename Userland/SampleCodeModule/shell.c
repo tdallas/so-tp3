@@ -57,7 +57,8 @@ void shell()
 		if (counter < MAX_WORD_LENGTH || ch == '\n' || ch == '\b')
 		{
 
-			putchar(ch);
+			if(ch != 0)
+				putchar(ch);
 
 			string[counter] = ch;
 			(ch != 0) ? counter++ : counter;

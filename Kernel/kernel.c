@@ -51,6 +51,8 @@ int main()
 	printBackGround();
 	// initializePageAllocator();
 
+	videoDriver_init();
+	keyboard_init();
 	process *shell = createProcess((uint64_t)sampleCodeModuleAddress, 0,0, "shell");
 	setProcessForeground(shell->pid);
 	runProcess(shell);
