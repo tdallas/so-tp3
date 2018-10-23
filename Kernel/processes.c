@@ -40,7 +40,7 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
 {
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
-  newProcess->priority = 1;
+  newProcess->priority = 3;
   newProcess->starvation = 0;
   newProcess->stackPage = (uint64_t)malloc(0x100000);
   newProcess->status = READY;
