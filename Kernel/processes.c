@@ -7,7 +7,6 @@
 #include "videoDriver.h"
 #include "messageQueueADT.h"
 
-static void freeDataPages(process *p);
 
 static process *processesTable[MAX_PROCESSES] = {NULL};
 static process *foreground = NULL;
@@ -45,7 +44,6 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   newProcess->stackPage = (uint64_t)malloc(0x100000);
   newProcess->status = READY;
   newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
-  setNullAllProcessPages(newProcess);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
 
@@ -74,17 +72,6 @@ process *getProcessByPid(uint64_t pid)
   return NULL;
 }
 
-void setNullAllProcessPages(process *process)
-{
-  int i;
-
-  for (i = 0; i < MAX_DATA_PAGES; i++)
-  {
-    process->dataPage[i] = NULL;
-  }
-
-  process->dataPageCount = 0;
-}
 
 void removeProcess(process *p)
 {
@@ -92,7 +79,6 @@ void removeProcess(process *p)
   if (p != NULL)
   {
     processesNumber--;
-    freeDataPages(p);
     if (foreground == p){
       setProcessForeground(processesTable[p->ppid]->pid);
 
@@ -104,34 +90,7 @@ void removeProcess(process *p)
   }
 }
 
-/* Libera las páginas de datos usadas por el proceso. */
-static void freeDataPages(process *p)
-{
-  int i;
 
-  for (i = 0; i < MAX_DATA_PAGES && p->dataPageCount > 0; i++)
-  {
-    if (p->dataPage[i] != NULL)
-    {
-      free((void *)p->dataPage[i]);
-      p->dataPageCount -= 1;
-    }
-  }
-}
-
-void addDataPage(process *p, void *page)
-{
-  int i = 0;
-
-  while (i < MAX_DATA_PAGES && p->dataPage[i] != NULL)
-    i++;
-
-  if (i < MAX_DATA_PAGES)
-  {
-    p->dataPageCount += 1;
-    p->dataPage[i] = page;
-  }
-}
 
 void exitShell()
 {
@@ -323,10 +282,6 @@ void printPIDS()
     {
       printString("Error", 0, 155, 255);
     }
-    printString("\n", 0, 155, 255);
-
-    printString("Data Page: ", 0, 155, 255);
-    printDec((uint64_t)processesTable[i]->dataPage);
     printString("\n", 0, 155, 255);
 
     printString("-------------------------------\n", 0, 155, 255);
