@@ -17,7 +17,8 @@ void pipetest1(){
 
   int processesPids[processes];
   for(int i=0; i< processes; i++){
-    processesPids[i] = execProcess(pipetest1Proc, 1, &parameter, "hijo", 0);
+    printf("hola\n");
+    processesPids[i] = execProcess(pipetest1Proc, 1, &parameter, "hijo", 0, 0, 0);
   }
 
 

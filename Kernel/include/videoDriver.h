@@ -45,9 +45,7 @@ typedef struct vbe_mode_info_structure
 	uint8_t reserved1[206];
 } __attribute__((packed)) vbe;
 
-void videoDriver_init();
-void printVideoDriverBuffer(unsigned char R, unsigned char G, unsigned char B);
-pipeADT getVideoDriverBuffer();
+
 
 int setActualPixel(unsigned int x, unsigned int y);
 int printPixel(unsigned int x, unsigned int y, unsigned char R, unsigned char G, unsigned char B);

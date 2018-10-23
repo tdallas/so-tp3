@@ -69,7 +69,6 @@ static const char shiftKeyMap[128] =
         0, /* All other keys are undefined */
 };
 
-static pipeADT pipeBuffer;
 
 static int buffer[BUFFER_SIZE] = {0};
 static int readIndex = 0;
@@ -79,13 +78,6 @@ static int elements = 0;
 static int shiftKey = 0;
 static int capsKey = 0;
 
-void keyboard_init(){
-  pipeBuffer = newPipe();
-}
-
-pipeADT getKeyboardDriverBuffer(){
-	return pipeBuffer;
-}
 
 void keyboard_handler()
 {
@@ -126,18 +118,17 @@ void keyboard_handler()
           c = shiftKeyMap[keyCode];
         }
       }
-      sendMessagePipe(pipeBuffer, &c, 1);
-      elements++;
-      // buffer[writeIndex] = c;
-      // writeIndex = (writeIndex + 1) % BUFFER_SIZE;
-      // if (elements < BUFFER_SIZE)
-      // {
-      //   elements++;
-      // }
-      // else
-      // {
-      //   readIndex = (readIndex + 1) % BUFFER_SIZE;
-      // }
+
+      buffer[writeIndex] = c;
+      writeIndex = (writeIndex + 1) % BUFFER_SIZE;
+      if (elements < BUFFER_SIZE)
+      {
+        elements++;
+      }
+      else
+      {
+        readIndex = (readIndex + 1) % BUFFER_SIZE;
+      }
     }
   }
 }
@@ -149,7 +140,8 @@ int getChar()
     return EOF;
   }
   int c;
-  receiveMessagePipe(pipeBuffer, (char*)&c, 1);
+  c = buffer[readIndex];
+  readIndex = (readIndex + 1) % BUFFER_SIZE;
   elements--;
   return c;
 }

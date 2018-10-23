@@ -113,7 +113,7 @@ int callFunction(char *buffer)
 	{
 		if (strcmp(argv[0], commands[i].name) == 0)
 		{
-			execProcess(commands[i].function, words, argv, commands[i].name, foreground);
+			execProcess(commands[i].function, words, argv, commands[i].name, foreground,0,0);
 			valid = 1;
 		}
 	}

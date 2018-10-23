@@ -10,30 +10,7 @@ static unsigned char backgroundR = 0;
 static unsigned char backgroundG = 0;
 static unsigned char backgroundB = 0;
 
-static pipeADT pipeBuffer;
-static mutexADT mut;
 
-void videoDriver_init(){
-	pipeBuffer = newPipe();
-	mut = mutexInit("");
-}
-
-pipeADT getVideoDriverBuffer(){
-	return pipeBuffer;
-}
-
-void printVideoDriverBuffer(unsigned char R, unsigned char G, unsigned char B){
-	mutexLock(mut);
-	int length = lengthAvailablePipe(pipeBuffer);
-	char msg[length+1];
-	msg[length]=0;
-
-	if(length>0){
-		receiveMessagePipe(pipeBuffer, msg, length);
-		printString(msg, R, G, B);
-	}
-	mutexUnlock(mut);
-}
 
 int setActualPixel(unsigned int x, unsigned int y)
 {

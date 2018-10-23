@@ -9,6 +9,5 @@
 extern int getKeyCode();
 int getChar();
 void keyboard_handler();
-void keyboard_init();
-pipeADT getKeyboardDriverBuffer();
+
 #endif

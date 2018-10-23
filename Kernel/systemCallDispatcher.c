@@ -8,6 +8,7 @@
 #include <scheduler.h>
 #include <mutex.h>
 #include <pipesADT.h>
+#include <fileDescriptors.h>
 
 static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
@@ -78,21 +79,29 @@ static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	if(!isProcessRunningInForeground())
-		return 0;
-	return getChar();
+	process * p = getCurrentProcess();
+	if(p->fd.stdin == 0){
+		if(!isProcessRunningInForeground())
+			return 0;
+		return getChar();
+	}else{
+		char * c;
+		receiveMessagePipe((pipeADT)p->fd.stdin, c, 1);
+		return *c;
+	}
 }
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	//printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
-
-//	sendMessagePipe(getVideoDriverBuffer(), (char)&rsi, 1);
-	char c = (char)rsi;
-	sendMessagePipe(getVideoDriverBuffer(), &c, 1);
-
-	printVideoDriverBuffer((unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
-	return 1;
+	process *p = getCurrentProcess();
+	if(p->fd.stdout == 0){
+		printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
+		return 1;
+	}else{
+		char c = (char)rsi;
+		sendMessagePipe((pipeADT)p->fd.stdout, &c, 1);
+		return 1;
+	}
 }
 
 static uint64_t _beepSound(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
@@ -160,7 +169,7 @@ static uint64_t _receive(uint64_t pid, uint64_t dest, uint64_t length, uint64_t 
 }
 
 static uint64_t _execProcess(uint64_t pointer, uint64_t argc, uint64_t argv, uint64_t name, uint64_t r9){
-	process *p = createProcess(pointer, argc, argv, (char*)name);
+	process *p = createProcess(pointer, argc, argv, (char*)name, (struct fileDescriptors*)r9);
 	runProcess(p);
 	return getProcessPid(p);
 }
