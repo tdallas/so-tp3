@@ -85,8 +85,8 @@ static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8,
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	// if(!isProcessRunningInForeground())
-	// 	return 0;
+	 if(!isProcessRunningInForeground())
+	 	return 0;
 	printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
 	return 1;
 }
@@ -155,10 +155,18 @@ static uint64_t _receive(uint64_t pid, uint64_t dest, uint64_t length, uint64_t 
 	return 1;
 }
 
-static uint64_t _execProcess(uint64_t pointer, uint64_t argc, uint64_t argv, uint64_t name, uint64_t r9){
+static uint64_t _execProcess(uint64_t pointer, uint64_t argc, uint64_t argv, uint64_t name, uint64_t foreground){
+
+
 	process *p = createProcess(pointer, argc, argv, (char*)name);
+	int pid = getProcessPid(p);
+	
+	if(foreground == 1){
+		setProcessForeground(pid);
+	}
+
 	runProcess(p);
-	return getProcessPid(p);
+	return pid;
 }
 
 static uint64_t _killProcess(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
@@ -167,6 +175,8 @@ static uint64_t _killProcess(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t 
 }
 
 static uint64_t _listProcesses(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
+	if(!isProcessRunningInForeground())
+		return 0;
 	printPIDS();
 	return 1;
 }
