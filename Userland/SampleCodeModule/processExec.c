@@ -16,6 +16,7 @@ int execProcess(void *function, int argc, char **argv, char *name, int foregroun
 	{
 		sysSetForeground(pid);
 	}
+	printf("%d\n", pid);
 	return pid;
 }
 
