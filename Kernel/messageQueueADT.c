@@ -195,3 +195,15 @@ void receiveMessage(messageQueueADT queue, int category, char* dest, int length)
   }
   mutexUnlock(queue->mutex);
 }
+
+int lengthAvailable(messageQueueADT queue, int category){
+  int aux = 0;
+  struct messageNode * curr = queue->first;
+  for(; curr != NULL; curr = curr->tail){
+    if(curr->message->category == category){
+      aux += curr->message->length;
+
+    }
+  }
+  return aux;
+}

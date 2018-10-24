@@ -1,6 +1,8 @@
 #ifndef KEYBOARD_DRIVER_H
 #define KEYBOARD_DRIVER_H
 
+#include <pipesADT.h>
+
 #define BUFFER_SIZE 128
 #define EOF 0
 

@@ -16,7 +16,7 @@ void msgtest1(){
 
   int processesPids[processes];
   for(int i=0; i< processes; i++){
-    processesPids[i] = execProcess(msgtest1Proc, 1, (char**)&parameter, "hijo", 0);
+    processesPids[i] = execProcess(msgtest1Proc, 1, (char**)&parameter, "hijo", 0,0,0);
   }
 
 

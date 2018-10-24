@@ -2,37 +2,52 @@
 #include <stdio.h>
 #include <pipes.h>
 #include <processExec.h>
-
+#include <mutex.h>
 #include <shell.h>
 
 void pipetest1Proc(int argc, char**argv);
 
+
 void pipetest1(){
   int pipe = newPipe();
   int processes = 3;
-  printf("Running %d processes.\n", processes);
+  void *mut = mutexInit("micro");
+  char *msg = "holaaa\n\0";
+  //printf("Running %d processes.\n", processes);
 
   int * parameter = malloc(sizeof(int));
   *parameter = pipe;
 
+  //printf("Pipe: %d\n", pipe);
   int processesPids[processes];
   for(int i=0; i< processes; i++){
-    processesPids[i] = execProcess(pipetest1Proc, 1, &parameter, "hijo", 0);
+    putchar(' ');
+    processesPids[i] = execProcess(pipetest1Proc, 1, (char**)&parameter, "hijo", 0, 0, 0);
   }
 
+   mutexLock(mut);
 
-  char *msg = "holaaa\n";
-  //printf("Pipe: %d\n", pipe);
   printf("Sending: %s\n", msg);
+  //putchar('a');
+  // for(int i=0; msg[i] != 0; i++){
+  //   putchar(msg[i]);
+  // }
+   mutexUnlock(mut);
   for(int i=0; i< processes; i++){
 
     sendMessagePipe(pipe, msg, 7);
 
   }
 
+  // while(1){
+  //
+  // }
+
 }
 
 void pipetest1Proc(int argc, char**argv){
+  void*mut=mutexInit("micro");
+  mutexLock(mut);
   int **p1_pointer = ((void**)argv);
   int p1 = **p1_pointer;
   char msg[8];
@@ -41,8 +56,12 @@ void pipetest1Proc(int argc, char**argv){
   receiveMessagePipe(p1, msg, index);
 
   msg[index]=0;
-
-  printf("Proceso %d: %s\n", getPid(), msg);
+  //printf("Proceso %d: %s\n", getPid(), msg);
+  for(int i=0; msg[i] != 0; i++){
+    putchar(msg[i]);
+  }
+  //printPids();
+  mutexUnlock(mut);
   exitProcess();
 }
 

@@ -3,6 +3,7 @@
 #include "include/lib.h"
 #include "include/processes.h"
 #include "include/scheduler.h"
+#include <mutexinstructions.h>
 //#include "include/videoDriver.h"
 
 static mutexADT mutex[255];
@@ -55,7 +56,8 @@ int mutexLock(mutex_t *mut)
 		mut->blockedProcesses[getProcessPid(p)]= p;
 		yieldProcess();
 	}
-	mut->value = 0;
+	//mut->value = 0;
+	lockMutexASM(&mut->value);
 
 	return 0;
 }
@@ -66,7 +68,8 @@ int mutexUnlock(mutex_t *mut)
 	for(int i = 0; i < MAX_PROCESSES; i++){
 		unblockProcess(mut->blockedProcesses[i]);
 	}
-	mut->value = 1;
+	//mut->value = 1;
+	unlockMutexASM(&mut->value);
 	yieldProcess();
 
 	return mut->value;

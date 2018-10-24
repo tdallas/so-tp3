@@ -6,12 +6,13 @@
 #include <mutexTest.h>
 #include <printPidsProc.h>
 #include <pipeTest.h>
+#include <fileDescriptorsTest.h>
 
 static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 16
+#define CMD_SIZE 17
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -30,7 +31,8 @@ static instruction commands[] = {
 		{"mutexTest\n", mutexTest},
 		{"pipeTest\n", pipeTest},
 		{"printPids\n", printPidsProc},
-		{"prodcons\n", prodcons}
+		{"prodcons\n", prodcons},
+		{"fdTest\n", fileDescriptorsTest}
 	};
 
 #define DEFAULT 0
@@ -57,7 +59,8 @@ void shell()
 		if (counter < MAX_WORD_LENGTH || ch == '\n' || ch == '\b')
 		{
 
-			putchar(ch);
+			if(ch != 0)
+				putchar(ch);
 
 			string[counter] = ch;
 			(ch != 0) ? counter++ : counter;
@@ -112,7 +115,7 @@ int callFunction(char *buffer)
 	{
 		if (strcmp(argv[0], commands[i].name) == 0)
 		{
-			execProcess(commands[i].function, words, argv, commands[i].name, foreground);
+			execProcess(commands[i].function, words, argv, commands[i].name, foreground,0,0);
 			valid = 1;
 		}
 	}

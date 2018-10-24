@@ -8,6 +8,7 @@
 #include <scheduler.h>
 #include <mutex.h>
 #include <pipesADT.h>
+#include <fileDescriptors.h>
 
 static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
@@ -64,7 +65,7 @@ static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64
 																										 _sendMessagePipe, //23
 																										 _receiveMessagePipe, //24
 																										 _deletePipe, //25
-												       														 _changePriority //26	
+												       														 _changePriority //26
 																									   };
 
 
@@ -80,17 +81,42 @@ static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	if(!isProcessRunningInForeground())
-		return 0;
-	return getChar();
+
+	process * p = getCurrentProcess();
+	if(p->fd.stdin == 0){
+		if(!isProcessRunningInForeground()){
+			return 0;
+		}
+
+
+		return getChar();
+	}else{
+		char * c;
+		receiveMessagePipe((pipeADT)p->fd.stdin, c, 1);
+
+		return (uint64_t)(*c);
+	}
+
 }
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	// if(!isProcessRunningInForeground())
-	// 	return 0;
-	printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
-	return 1;
+
+	process *p = getCurrentProcess();
+	if(p->fd.stdout == 0){
+		// mutexADT mut = mutexInit("video");
+		// mutexLock(mut);
+
+		printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
+
+		//mutexUnlock(mut);
+		return 1;
+	}else{
+
+		char c = (char)rsi;
+		sendMessagePipe((pipeADT)p->fd.stdout, &c, 1);
+		return 1;
+	}
 }
 
 static uint64_t _beepSound(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
@@ -157,18 +183,11 @@ static uint64_t _receive(uint64_t pid, uint64_t dest, uint64_t length, uint64_t 
 	return 1;
 }
 
-static uint64_t _execProcess(uint64_t pointer, uint64_t argc, uint64_t argv, uint64_t name, uint64_t foreground){
-
-
-	process *p = createProcess(pointer, argc, argv, (char*)name);
-	int pid = getProcessPid(p);
-	
-	if(foreground == 1){
-		setProcessForeground(pid);
-	}
-
+static uint64_t _execProcess(uint64_t pointer, uint64_t argc, uint64_t argv, uint64_t name, uint64_t r9){
+	struct fileDescriptors * fd = (struct fileDescriptors *)r9;
+	process *p = createProcess(pointer, argc, argv, (char*)name, (struct fileDescriptors*)fd);
 	runProcess(p);
-	return pid;
+	return p->pid;
 }
 
 static uint64_t _killProcess(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
@@ -214,16 +233,16 @@ static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 }
 
 static uint64_t _sendMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	//printString("\nSend pipe:", 100, 100, 255);
-	//printDec(pipe);
+
 	sendMessagePipe((pipeADT)pipe, (char*)msg, length);
+
 	return 1;
 }
 
 static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	// printString("\nPipe:", 100, 100, 255);
-	// printDec(pipe);
+
 	receiveMessagePipe((pipeADT)pipe, (char*)msg, length);
+
 	return 1;
 }
 

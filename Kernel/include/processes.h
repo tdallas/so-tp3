@@ -6,6 +6,7 @@
 #include "defs.h"
 #include "mutex.h"
 #include "messageQueueADT.h"
+#include "fileDescriptors.h"
 
 #define RUNNING 0
 #define READY 1
@@ -26,6 +27,7 @@ typedef struct
   uint64_t pid;
   uint64_t ppid;
   messageQueueADT messageQueue;
+  struct fileDescriptors fd;
 } process;
 
 typedef char status;
@@ -65,7 +67,7 @@ typedef struct
 
 messageQueueADT getMessageQueue(int pid);
 
-process *createProcess(uint64_t rip, uint64_t argc, uint64_t argv, const char *name);
+process *createProcess(uint64_t rip, uint64_t argc, uint64_t argv, const char *name, struct fileDescriptors* fd);
 void removeProcess(process *p);
 
 void setProcessRsp(process *p, uint64_t rsp);

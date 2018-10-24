@@ -24,8 +24,8 @@ void test1Proc(int argc, char ** argv){
 void test1(){
   void * mutex = mutexInit("mutexTest1");
 
-  execProcess(test1Proc, (int)mutex, NULL, "test1-1", 0);
-  execProcess(test1Proc, (int)mutex, NULL, "test1-2", 0);
+  execProcess(test1Proc, (int)mutex, NULL, "test1-1", 0, 0, 0);
+  execProcess(test1Proc, (int)mutex, NULL, "test1-2", 0, 0, 0);
 
 }
 
@@ -45,9 +45,9 @@ void test2Proc(int argc, char ** argv){
 
 void test2(){
   void * mutex = mutexInit("mutexTest2");
-  execProcess(test2Proc, (int)mutex, NULL, "test2-1", 0);
-  execProcess(test2Proc, (int)mutex, NULL, "test2-2", 0);
-  execProcess(test2Proc, (int)mutex, NULL, "test2-3", 0);
+  execProcess(test2Proc, (int)mutex, NULL, "test2-1", 0, 0, 0);
+  execProcess(test2Proc, (int)mutex, NULL, "test2-2", 0, 0, 0);
+  execProcess(test2Proc, (int)mutex, NULL, "test2-3", 0, 0, 0);
 
 }
 

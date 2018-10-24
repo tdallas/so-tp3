@@ -1,4 +1,5 @@
 #include <keyboardDriver.h>
+#include <pipesADT.h>
 
 #define IS_ALPHA(C) (C >= 'a' && C <= 'z')
 
@@ -68,6 +69,7 @@ static const char shiftKeyMap[128] =
         0, /* All other keys are undefined */
 };
 
+
 static int buffer[BUFFER_SIZE] = {0};
 static int readIndex = 0;
 static int writeIndex = 0;
@@ -75,6 +77,7 @@ static int elements = 0;
 
 static int shiftKey = 0;
 static int capsKey = 0;
+
 
 void keyboard_handler()
 {
@@ -115,6 +118,7 @@ void keyboard_handler()
           c = shiftKeyMap[keyCode];
         }
       }
+
       buffer[writeIndex] = c;
       writeIndex = (writeIndex + 1) % BUFFER_SIZE;
       if (elements < BUFFER_SIZE)

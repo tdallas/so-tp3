@@ -1,7 +1,8 @@
 #ifndef PIPES_H
 #define PIPES_H
 
-typedef messageQueueADT pipeADT;
+
+typedef struct pipeHeader * pipeADT;
 
 pipeADT newPipe();
 
@@ -11,5 +12,6 @@ void receiveMessagePipe(pipeADT pipe, char * dest, int length);
 
 void deletePipe(pipeADT pipe);
 
+int lengthAvailablePipe(pipeADT pipe);
 
 #endif

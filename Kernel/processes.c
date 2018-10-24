@@ -6,6 +6,7 @@
 #include "scheduler.h"
 #include "videoDriver.h"
 #include "messageQueueADT.h"
+#include <fileDescriptors.h>
 
 
 static process *processesTable[MAX_PROCESSES] = {NULL};
@@ -35,7 +36,7 @@ int insertProcess(process *p)
   return -1;
 }
 
-process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name)
+process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name, struct fileDescriptors *fd)
 {
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
@@ -46,6 +47,9 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
+  newProcess->fd.stdin = fd->stdin;
+  newProcess->fd.stdout = fd->stdout;
+
 
   if (newProcess->pid != 0)
   {
@@ -53,7 +57,7 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   }
   else
   {
-    //Pone en foreground al primer proceso 
+    //Pone en foreground al primer proceso
     foreground = newProcess;
     newProcess->ppid = 0;
   }
@@ -300,7 +304,7 @@ void setPriority(uint64_t pid, uint64_t priority){
     if ( p != NULL){
     p -> priority = priority;
 
-    
+
     }
 }
 

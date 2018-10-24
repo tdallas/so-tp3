@@ -94,7 +94,7 @@ void killLastProducer(){
 
 void prodcons(){
   mutex = mutexInit("prodcons");
-  
+
   printf("::: Prodcons :::\n");
   printf("'c'/'x' to add/remove consumer, 'p'/'o' to add/remove producer and 'q' to quit.\n\n");
   char c;
@@ -105,7 +105,7 @@ void prodcons(){
         //add consumer
         mutexLock(mutex);
         if(cons < MAX_PRODUCERS){
-          execProcess(consumer, cons+1, 0, 0, 0);
+          execProcess(consumer, cons+1, 0, 0, 0,0,0);
           cons++;
           printf("Added consumer (%d).\n", cons);
 
@@ -118,7 +118,7 @@ void prodcons(){
         //add producer
         mutexLock(mutex);
         if(prod < MAX_PRODUCERS){
-          execProcess(producer, prod+1, 0, 0, 0);
+          execProcess(producer, prod+1, 0, 0, 0,0,0);
           prod++;
           printf("Added producer (%d).\n", prod);
 

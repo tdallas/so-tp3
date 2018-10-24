@@ -13,4 +13,6 @@ void receiveMessage(messageQueueADT queue, int pid, char* dest, int length);
 
 void deleteMessageQueue(messageQueueADT queue);
 
+int lengthAvailable(messageQueueADT queue, int category);
+
 #endif
