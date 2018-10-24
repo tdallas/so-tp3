@@ -39,9 +39,7 @@ void pipetest1(){
 
   }
 
-  // while(1){
-  //
-  // }
+  sendMessagePipe(pipe, 0, 1);
 
 }
 
