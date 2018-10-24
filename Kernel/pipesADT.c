@@ -112,6 +112,7 @@ void sendMessagePipe(pipeADT pipe, char * text, int length){
 void receiveMessagePipe(pipeADT pipe, char * text, int length){
   mutexLock(pipe->mutex);
   if(pipe->size < length){
+
     process *p = getCurrentProcess();
     //*** Block process ***
 

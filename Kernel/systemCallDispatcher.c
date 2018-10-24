@@ -79,16 +79,22 @@ static uint64_t _getTime(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 
 static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
+
 	process * p = getCurrentProcess();
 	if(p->fd.stdin == 0){
-		if(!isProcessRunningInForeground())
+		if(!isProcessRunningInForeground()){
 			return 0;
+		}
+
+
 		return getChar();
 	}else{
 		char * c;
 		receiveMessagePipe((pipeADT)p->fd.stdin, c, 1);
-		return *c;
+
+		return (uint64_t)(*c);
 	}
+
 }
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
@@ -96,9 +102,12 @@ static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8
 
 	process *p = getCurrentProcess();
 	if(p->fd.stdout == 0){
-		//printString("@", 100 ,100,100);
+		// mutexADT mut = mutexInit("video");
+		// mutexLock(mut);
+
 		printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
-		//printString("2", 100 ,100,100);
+
+		//mutexUnlock(mut);
 		return 1;
 	}else{
 
@@ -220,17 +229,16 @@ static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 }
 
 static uint64_t _sendMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	//printString("\nSend pipe:", 100, 100, 255);
-	//printDec(pipe);
+
 	sendMessagePipe((pipeADT)pipe, (char*)msg, length);
+
 	return 1;
 }
 
 static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length, uint64_t r8, uint64_t r9){
-	// printString("\nPipe:", 100, 100, 255);
-	// printDec(pipe);
+
 	receiveMessagePipe((pipeADT)pipe, (char*)msg, length);
-	//printString("\nNo murioo:", 100, 100, 255);
+
 	return 1;
 }
 

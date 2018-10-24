@@ -49,8 +49,9 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   setNullAllProcessPages(newProcess);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
-  // newProcess->fd.stdin = fd->stdin;
-  // newProcess->fd.stdout = fd->stdout;
+  newProcess->fd.stdin = fd->stdin;
+  newProcess->fd.stdout = fd->stdout;
+
 
   if (newProcess->pid != 0)
   {

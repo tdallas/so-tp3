@@ -1,6 +1,4 @@
 #include <videoDriver.h>
-#include <pipesADT.h>
-#include <mutex.h>
 
 static vbe *vbeStruct = (vbe *)0x0000000000005C00; //Sacado de sysvar.asm en Bootloader/Pure64/src
 static char buffer[64] = {0};
@@ -9,8 +7,6 @@ static unsigned int actualY = 0;
 static unsigned char backgroundR = 0;
 static unsigned char backgroundG = 0;
 static unsigned char backgroundB = 0;
-
-
 
 int setActualPixel(unsigned int x, unsigned int y)
 {

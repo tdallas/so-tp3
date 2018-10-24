@@ -6,12 +6,13 @@
 #include <mutexTest.h>
 #include <printPidsProc.h>
 #include <pipeTest.h>
+#include <fileDescriptorsTest.h>
 
 static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 15
+#define CMD_SIZE 17
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -30,7 +31,8 @@ static instruction commands[] = {
 		{"mutexTest\n", mutexTest},
 		{"pipeTest\n", pipeTest},
 		{"printPids\n", printPidsProc},
-		{"prodcons\n", prodcons}
+		{"prodcons\n", prodcons},
+		{"fdTest\n", fileDescriptorsTest}
 	};
 
 #define DEFAULT 0
