@@ -6,7 +6,6 @@
 #include "defs.h"
 #include "mutex.h"
 #include "messageQueueADT.h"
-#include "fileDescriptors.h"
 
 #define RUNNING 0
 #define READY 1
@@ -24,10 +23,11 @@ typedef struct
   uint64_t starvation;
   uint64_t rsp;
   uint64_t stackPage;
+  uint64_t dataPageCount;
+  void *dataPage[MAX_DATA_PAGES];
   uint64_t pid;
   uint64_t ppid;
   messageQueueADT messageQueue;
-  struct fileDescriptors fd;
 } process;
 
 typedef char status;
@@ -67,7 +67,7 @@ typedef struct
 
 messageQueueADT getMessageQueue(int pid);
 
-process *createProcess(uint64_t rip, uint64_t argc, uint64_t argv, const char *name, struct fileDescriptors* fd);
+process *createProcess(uint64_t rip, uint64_t argc, uint64_t argv, const char *name);
 void removeProcess(process *p);
 
 void setProcessRsp(process *p, uint64_t rsp);
@@ -84,6 +84,7 @@ void lockTable();
 void unlockTable();
 uint64_t getProcessesNumber();
 int insertProcess(process *p);
+void setNullAllProcessPages(process *process);
 uint64_t createNewProcessStack(uint64_t rip, uint64_t stackPage, uint64_t argc, uint64_t argv);
 void exitShell();
 process *getProcessByPid(uint64_t pid);
@@ -96,7 +97,7 @@ int deleteThisProcess(int pid);
 int deleteProcess(process *p);
 int isProcessDeleted(process *p);
 
-
+void addDataPage(process *p, void *page);
 
 void printPIDS();
 void whileTrue();
