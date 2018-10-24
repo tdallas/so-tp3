@@ -12,7 +12,7 @@ static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 17
+#define CMD_SIZE 19
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -32,7 +32,9 @@ static instruction commands[] = {
 		{"pipeTest\n", pipeTest},
 		{"printPids\n", printPidsProc},
 		{"prodcons\n", prodcons},
-		{"fdTest\n", fileDescriptorsTest}
+		{"fdTest\n", fileDescriptorsTest},
+		{"prod\n", fileDescriptorsTestProcProd},
+		{"cons\n", fileDescriptorsTestProcCons}
 	};
 
 #define DEFAULT 0
@@ -93,16 +95,26 @@ void shell()
 	}
 }
 
-int searchPipe(char* buffer){
+int searchPipe(char* buffer, char* dest){
 	int i=0;
 	while(buffer[i] != '\n' && buffer[i]!='|'){
 		i++;
 	}
 	if(buffer[i]=='\n'){
-		return -1;
+		return 0;
 	}else{
 		buffer[i]='\n';
-		return i+1;
+		int aux=i+1;
+		i++;
+		int j=0;
+		while(buffer[i]!='\n'&&buffer[i]!=0){
+			dest[j]=buffer[i];
+			j++;
+			i++;
+		}
+		dest[j]='\n';
+		//buffer[aux]=' ';
+		return 1;
 	}
 }
 
@@ -117,13 +129,19 @@ int callFunction(char *buffer, int stdin, int stdout)
 	int words;
 	char **argv;
 
-	int pipeIndex = searchPipe(buffer);
+	char aux[BUFFERSIZE];
+	int pipeIndex = searchPipe(buffer, aux);
 
 	int foreground = 1;
-	if (*buffer == '&' || stdin != 0)
+	if (*buffer == '&')
 	{
 		buffer++;
 		foreground = 0;
+	}
+	if(stdin != 0){
+
+		foreground=0;
+
 	}
 
 	parseParams(buffer, &words, &argv);
@@ -137,10 +155,10 @@ int callFunction(char *buffer, int stdin, int stdout)
 		}
 	}
 
-	if(pipeIndex != -1){
+	if(pipeIndex != 0){
 		int pipe = newPipe();
 		if(valid){
-			valid = callFunction((buffer+pipeIndex), pipe, 0);
+			valid = callFunction(aux, pipe, 0);
 		}
 		stdout = pipe;
 	}
@@ -149,7 +167,6 @@ int callFunction(char *buffer, int stdin, int stdout)
 		i--;
 		putchar(' ');
 		execProcess(commands[i].function, words, argv, commands[i].name, foreground,stdin,stdout);
-		printPids();
 	}else{
 		return 0;
 	}

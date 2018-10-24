@@ -5,20 +5,22 @@
 
 
 fileDescriptorsTestProcProd(int argc, char** argv){
-  for(int i=0; i < 5; i++){
+  for(int i=0; i < 8; i++){
     printf("Item");
   }
+  putchar('\0');
   exitProcess();
 }
 
 fileDescriptorsTestProcCons(int argc, char** argv){
   char item[5];
   item[4]=0;
-  for(int i=0; i < 10; i++){
+  for(int i=0; i < 11; i++){
     printf("Consumido: ");
     for(int j=0; j<4; j++){
       char c = getchar();
-      if(c == 0){
+      if(c == '\0'){
+        //putchar(' ');
         printf("No hay mas.");
         exitProcess();
       }
@@ -26,8 +28,8 @@ fileDescriptorsTestProcCons(int argc, char** argv){
     }
 
     printf("\n");
-    //printf("Consumido: %s\n");
   }
+  putchar('%');
 exitProcess();
 }
 

@@ -68,8 +68,7 @@ int getchar()
 
 void putchar(unsigned char c)
 {
-    if (c != 0)
-        systemCall(2, (uint64_t)c, (uint64_t)charR, (uint64_t)charG, (uint64_t)charB, 0);
+  systemCall(2, (uint64_t)c, (uint64_t)charR, (uint64_t)charG, (uint64_t)charB, 0);
 }
 
 void *malloc(long unsigned int size)
