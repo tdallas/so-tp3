@@ -63,7 +63,8 @@ static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64
 																										 _newPipe, //22
 																										 _sendMessagePipe, //23
 																										 _receiveMessagePipe, //24
-																										 _deletePipe //25
+																										 _deletePipe, //25
+												       														 _changePriority //26	
 																									   };
 
 
