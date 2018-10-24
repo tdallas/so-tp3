@@ -38,7 +38,6 @@ int insertProcess(process *p)
 
 process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name)
 {
-  stackFrame *newSF;
 
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
