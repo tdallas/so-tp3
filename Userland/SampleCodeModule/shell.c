@@ -56,10 +56,9 @@ void shell()
 	{
 		ch = getchar();
 
-		if (counter < MAX_WORD_LENGTH || ch == '\n' || ch == '\b')
+		if ( (counter < MAX_WORD_LENGTH || ch == '\n' || ch == '\b') && ch != 0)
 		{
 
-			if(ch != 0)
 				putchar(ch);
 
 			string[counter] = ch;
@@ -67,7 +66,9 @@ void shell()
 
 			if (ch == '\n')
 			{
-				callFunction(string);
+				if(callFunction(string,0,0)==0){
+					printf("Wrong Input!\n");
+				}
 				for(int aux=0; aux<counter; aux++){
 					string[aux] = 0;
 				}
@@ -92,8 +93,22 @@ void shell()
 	}
 }
 
-int callFunction(char *buffer)
+int searchPipe(char* buffer){
+	int i=0;
+	while(buffer[i] != '\n' && buffer[i]!='|'){
+		i++;
+	}
+	if(buffer[i]=='\n'){
+		return -1;
+	}else{
+		buffer[i]='\n';
+		return i+1;
+	}
+}
+
+int callFunction(char *buffer, int stdin, int stdout)
 {
+
 	if (buffer == NULL)
 	{
 		return 1;
@@ -102,8 +117,10 @@ int callFunction(char *buffer)
 	int words;
 	char **argv;
 
+	int pipeIndex = searchPipe(buffer);
+
 	int foreground = 1;
-	if (*buffer == '&')
+	if (*buffer == '&' || stdin != 0)
 	{
 		buffer++;
 		foreground = 0;
@@ -115,18 +132,33 @@ int callFunction(char *buffer)
 	{
 		if (strcmp(argv[0], commands[i].name) == 0)
 		{
-			execProcess(commands[i].function, words, argv, commands[i].name, foreground,0,0);
 			valid = 1;
+
 		}
 	}
 
-	if (valid == 0){
-		printf("Wrong input\n$>");
+	if(pipeIndex != -1){
+		int pipe = newPipe();
+		if(valid){
+			valid = callFunction((buffer+pipeIndex), pipe, 0);
+		}
+		stdout = pipe;
+	}
+
+	if(valid){
+		i--;
+		putchar(' ');
+		execProcess(commands[i].function, words, argv, commands[i].name, foreground,stdin,stdout);
+		printPids();
+	}else{
 		return 0;
 	}
 
+
 	return 1;
 }
+
+
 
 void parseParams(char *command, int *argc, char ***argv)
 {
