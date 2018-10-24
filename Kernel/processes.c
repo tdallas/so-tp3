@@ -6,6 +6,7 @@
 #include "scheduler.h"
 #include "videoDriver.h"
 #include "messageQueueADT.h"
+#include <fileDescriptors.h>
 
 static void freeDataPages(process *p);
 
@@ -36,12 +37,12 @@ int insertProcess(process *p)
   return -1;
 }
 
-process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name)
+process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name, struct fileDescriptors *fd)
 {
 
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
-  newProcess->priority = 1;
+  newProcess->priority = 3;
   newProcess->starvation = 0;
   newProcess->stackPage = (uint64_t)malloc(0x100000);
   newProcess->status = READY;
@@ -49,6 +50,8 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   setNullAllProcessPages(newProcess);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
+  newProcess->fd.stdin = fd->stdin;
+  newProcess->fd.stdout = fd->stdout;
 
   if (newProcess->pid != 0)
   {
@@ -104,6 +107,7 @@ void removeProcess(process *p)
     processesTable[p->pid] = NULL;
     free((void *)p->stackPage);
     free((void *)p);
+    //deleteMessageQueue(p->messageQueue);
     free((void *)p->messageQueue);
 
   }
