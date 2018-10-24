@@ -6,8 +6,8 @@
 #include "scheduler.h"
 #include "videoDriver.h"
 #include "messageQueueADT.h"
-#include <fileDescriptors.h>
 
+static void freeDataPages(process *p);
 
 static process *processesTable[MAX_PROCESSES] = {NULL};
 static process *foreground = NULL;
@@ -36,20 +36,20 @@ int insertProcess(process *p)
   return -1;
 }
 
-process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name, struct fileDescriptors *fd)
+process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, const char *name)
 {
+  stackFrame *newSF;
+
   process *newProcess = (process *)malloc(sizeof(*newProcess));
   strcpyKernel(newProcess->name, name);
-  newProcess->priority = 3;
+  newProcess->priority = 1;
   newProcess->starvation = 0;
   newProcess->stackPage = (uint64_t)malloc(0x100000);
   newProcess->status = READY;
   newProcess->rsp = createNewProcessStack(newProcessRIP, newProcess->stackPage, argc, argv);
+  setNullAllProcessPages(newProcess);
   insertProcess(newProcess);
   newProcess->messageQueue = newMessageQueue(newProcess->pid);
-  newProcess->fd.stdin = fd->stdin;
-  newProcess->fd.stdout = fd->stdout;
-
 
   if (newProcess->pid != 0)
   {
@@ -57,11 +57,14 @@ process *createProcess(uint64_t newProcessRIP, uint64_t argc, uint64_t argv, con
   }
   else
   {
-    //Pone en foreground al primer proceso
+    //Pone en foreground al primer proceso 
     foreground = newProcess;
     newProcess->ppid = 0;
   }
+  //
+ 
 
+  //
   return newProcess;
 }
 
@@ -76,6 +79,17 @@ process *getProcessByPid(uint64_t pid)
   return NULL;
 }
 
+void setNullAllProcessPages(process *process)
+{
+  int i;
+
+  for (i = 0; i < MAX_DATA_PAGES; i++)
+  {
+    process->dataPage[i] = NULL;
+  }
+
+  process->dataPageCount = 0;
+}
 
 void removeProcess(process *p)
 {
@@ -83,6 +97,7 @@ void removeProcess(process *p)
   if (p != NULL)
   {
     processesNumber--;
+    freeDataPages(p);
     if (foreground == p){
       setProcessForeground(processesTable[p->ppid]->pid);
 
@@ -90,11 +105,39 @@ void removeProcess(process *p)
     processesTable[p->pid] = NULL;
     free((void *)p->stackPage);
     free((void *)p);
-    deleteMessageQueue(p->messageQueue);
+    free((void *)p->messageQueue);
+
   }
 }
 
+/* Libera las páginas de datos usadas por el proceso. */
+static void freeDataPages(process *p)
+{
+  int i;
 
+  for (i = 0; i < MAX_DATA_PAGES && p->dataPageCount > 0; i++)
+  {
+    if (p->dataPage[i] != NULL)
+    {
+      free((void *)p->dataPage[i]);
+      p->dataPageCount -= 1;
+    }
+  }
+}
+
+void addDataPage(process *p, void *page)
+{
+  int i = 0;
+
+  while (i < MAX_DATA_PAGES && p->dataPage[i] != NULL)
+    i++;
+
+  if (i < MAX_DATA_PAGES)
+  {
+    p->dataPageCount += 1;
+    p->dataPage[i] = page;
+  }
+}
 
 void exitShell()
 {
@@ -158,7 +201,6 @@ void blockProcess(process *p)
   if (p != NULL && p->status != DELETE)
   {
     p->status = BLOCKED;
-
   }
 }
 
@@ -212,9 +254,14 @@ uint64_t getProcessesNumber()
 /* Llena el stack para que sea hookeado al cargar un nuevo proceso
 ** https://bitbucket.org/RowDaBoat/wyrm */
 
+stackFrame sf;
+//
+
 uint64_t createNewProcessStack(uint64_t rip, uint64_t stackPage, uint64_t argc, uint64_t argv)
 {
   stackFrame *newStackFrame = (stackFrame *)stackPage - 1;
+
+
 
   newStackFrame->gs = 0x001;
   newStackFrame->fs = 0x002;
@@ -240,8 +287,22 @@ uint64_t createNewProcessStack(uint64_t rip, uint64_t stackPage, uint64_t argc, 
   newStackFrame->ss = 0x000;
   newStackFrame->base = 0x000;
 
+  //
+  //
+ 
+
   return (uint64_t)&newStackFrame->gs;
 }
+
+//
+//
+//
+//
+
+
+
+
+
 
 void printPIDS()
 {
@@ -288,6 +349,10 @@ void printPIDS()
     }
     printString("\n", 0, 155, 255);
 
+    printString("Data Page: ", 0, 155, 255);
+    printDec((uint64_t)processesTable[i]->dataPage);
+    printString("\n", 0, 155, 255);
+
     printString("-------------------------------\n", 0, 155, 255);
   }
 
@@ -304,7 +369,7 @@ void setPriority(uint64_t pid, uint64_t priority){
     if ( p != NULL){
     p -> priority = priority;
 
-
+    
     }
 }
 
