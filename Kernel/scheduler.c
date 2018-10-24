@@ -105,33 +105,36 @@ void yieldProcess()
 }
 
 int counter = 0;
-int priorityHandeling = 1;
+int priorityHandling = 1;
 int processes = 0;
 
 static void handlePriority()
 {
 	if (processes != getProcessesNumber()){
-
+		
 		processes = getProcessesNumber();
-		priorityHandeling = 1;
+		priorityHandling = 1;		
 	}
 
-	if( current->p->priority == priorityHandeling){
+	if( current->p->priority == priorityHandling){
+		counter = 0;
 		return;
 	}
 	else{
 		current->p->starvation++;
 
 		if (current->p->starvation <=50){
+		
 		prev = current;
 		current = current->next;
+		
 		}
 		else{
 			current->p->starvation = 0;
 			counter++;
 			if ( processes <= counter){
-				if (priorityHandeling  != 3){
-					priorityHandeling++;
+				if (priorityHandling  != 3){
+					priorityHandling++;
 					counter = 0;
 				}
 			}
@@ -142,8 +145,8 @@ static void handlePriority()
 	counter++;
 
 	if ( processes <= counter){
-		if (priorityHandeling  != 3){
-			priorityHandeling++;
+		if (priorityHandling  != 3){
+			priorityHandling++;
 			counter = 0;
 		}
 	}
