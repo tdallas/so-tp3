@@ -35,6 +35,7 @@ static uint64_t _newPipe(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 static uint64_t _sendMessagePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _receiveMessagePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 static uint64_t _deletePipe(uint64_t pie, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
+static uint64_t _changePriority(uint64_t pid, uint64_t priority, uint64_t rcx, uint64_t r8, uint64_t r9);
 
 
 static uint64_t (*systemCall[])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9) = {_getTime,                         //0
@@ -85,8 +86,8 @@ static uint64_t _readChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8,
 
 static uint64_t _writeChar(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9)
 {
-	 if(!isProcessRunningInForeground())
-	 	return 0;
+	// if(!isProcessRunningInForeground())
+	// 	return 0;
 	printChar((unsigned char)rsi, (unsigned char)rdx, (unsigned char)rcx, (unsigned char)r8);
 	return 1;
 }
@@ -227,5 +228,10 @@ static uint64_t _receiveMessagePipe(uint64_t pipe, uint64_t msg, uint64_t length
 
 static uint64_t _deletePipe(uint64_t pipe, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9){
 	deletePipe((pipeADT)pipe);
+	return 1;
+}
+
+static uint64_t _changePriority(uint64_t pid, uint64_t priority, uint64_t rcx, uint64_t r8, uint64_t r9){
+	setPriority(pid, priority);
 	return 1;
 }
