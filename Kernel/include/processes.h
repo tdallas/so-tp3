@@ -24,6 +24,8 @@ typedef struct
   uint64_t starvation;
   uint64_t rsp;
   uint64_t stackPage;
+  uint64_t dataPageCount;
+  void *dataPage[MAX_DATA_PAGES];
   uint64_t pid;
   uint64_t ppid;
   messageQueueADT messageQueue;
@@ -84,6 +86,7 @@ void lockTable();
 void unlockTable();
 uint64_t getProcessesNumber();
 int insertProcess(process *p);
+void setNullAllProcessPages(process *process);
 uint64_t createNewProcessStack(uint64_t rip, uint64_t stackPage, uint64_t argc, uint64_t argv);
 void exitShell();
 process *getProcessByPid(uint64_t pid);
@@ -96,7 +99,7 @@ int deleteThisProcess(int pid);
 int deleteProcess(process *p);
 int isProcessDeleted(process *p);
 
-
+void addDataPage(process *p, void *page);
 
 void printPIDS();
 void whileTrue();
