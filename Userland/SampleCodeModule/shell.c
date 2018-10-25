@@ -7,12 +7,13 @@
 #include <printPidsProc.h>
 #include <pipeTest.h>
 #include <fileDescriptorsTest.h>
+#include <setPriorityProc.h>
 
 static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 19
+#define CMD_SIZE 20
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -34,7 +35,8 @@ static instruction commands[] = {
 		{"prodcons\n", prodcons},
 		{"fdTest\n", fileDescriptorsTest},
 		{"prod\n", fileDescriptorsTestProcProd},
-		{"cons\n", fileDescriptorsTestProcCons}
+		{"cons\n", fileDescriptorsTestProcCons},
+		{"setPriority\0", setPriorityProc}
 	};
 
 #define DEFAULT 0
