@@ -44,3 +44,31 @@ int getPid(){
 void printPids() {
 	systemCall(15,0,0,0,0,0);
 }
+
+void setPriority(int pid, int priority){
+	
+	int a = my_getnbr(pid);
+	int b = my_getnbr(priority);
+	systemCall(26,(uint64_t)a ,(uint64_t)b ,0,0,0);
+}
+
+int my_getnbr(char *str)
+{
+  int result;
+  int puiss;
+
+  result = 0;
+  puiss = 1;
+  while (('-' == (*str)) || ((*str) == '+'))
+  {
+      if (*str == '-')
+        puiss = puiss * -1;
+      str++;
+  }
+  while ((*str >= '0') && (*str <= '9'))
+  {
+      result = (result * 10) + ((*str) - '0');
+      str++;
+  }
+  return (result * puiss);
+}
