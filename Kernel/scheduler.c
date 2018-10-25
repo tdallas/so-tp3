@@ -107,33 +107,31 @@ void yieldProcess()
 int counter = 0;
 int priorityHandling = 1;
 int processes = 0;
-
 static void handlePriority()
 {
-	if (processes != getProcessesNumber()){
-		
+	if (processes != getProcessesNumber())
+	{	
 		processes = getProcessesNumber();
 		priorityHandling = 1;		
 	}
-
-	if( current->p->priority == priorityHandling){
+	if( current->p->priority == priorityHandling)
+	{
 		counter = 0;
 		return;
 	}
 	else{
 		current->p->starvation++;
-
-		if (current->p->starvation <=50){
-		
+		if (current->p->starvation <=50)
+		{	
 		prev = current;
-		current = current->next;
-		
+		current = current->next;	
 		}
 		else{
 			current->p->starvation = 0;
 			counter++;
 			if ( processes <= counter){
-				if (priorityHandling  != 3){
+				if (priorityHandling  != 3)
+				{
 					priorityHandling++;
 					counter = 0;
 				}
@@ -141,16 +139,15 @@ static void handlePriority()
 			return;
 		}
 	}
-
 	counter++;
-
-	if ( processes <= counter){
-		if (priorityHandling  != 3){
+	if ( processes <= counter)
+	{
+		if (priorityHandling  != 3)
+		{
 			priorityHandling++;
 			counter = 0;
 		}
 	}
-
 	setNextCurrent();
 }
 
@@ -182,7 +179,6 @@ void printBlockedProcessesList()
 	{
 		printString("PID: ", 0, 155, 255);
 		printDec(temp->process->pid);
-		//printInt(temp->process->pid, 0, 155, 255); BORRAR
 		printString("\n", 0, 155, 255);
 		temp = temp->next;
 	}

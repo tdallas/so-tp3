@@ -8,12 +8,14 @@
 #include <pipeTest.h>
 #include <fileDescriptorsTest.h>
 #include <diningPhilosophers.h>
+#include <setPriorityProc.h>
+
 
 static char choice[BUFFER_SIZE];
 
 #define STEP 10
 
-#define CMD_SIZE 20
+#define CMD_SIZE 21
 
 static int isRunning = 1;
 static instruction commands[] = {
@@ -36,7 +38,9 @@ static instruction commands[] = {
 		{"fdTest\n", fileDescriptorsTest},
 		{"prod\n", fileDescriptorsTestProcProd},
 		{"cons\n", fileDescriptorsTestProcCons},
-		{"philosophers\n", diningPhilosophers}
+		{"philosophers\n", diningPhilosophers},
+
+		{"setPriority\0", setPriorityProc}
 	};
 
 #define DEFAULT 0
