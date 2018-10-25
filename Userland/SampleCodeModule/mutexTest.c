@@ -54,7 +54,7 @@ void test2(){
 
 
 void mutexTest(int argc, char ** argv){
-  printf("Running mutex test.\n");
+  printf("Running mutex test. Press '1' to run test1, '2' to run test2 and 'q' to quit.\n");
   char c;
   while(1){
     c = getchar();

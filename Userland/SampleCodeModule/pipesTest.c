@@ -64,7 +64,7 @@ void pipetest1Proc(int argc, char**argv){
 }
 
 void pipeTest(int argc, char **argv){
-    printf("Running pipe test.\n");
+    printf("Running pipe test. Press '1' to run test and 'q' to exit.\n");
     char c;
     while(1){
       c = getchar();

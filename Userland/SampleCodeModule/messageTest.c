@@ -47,7 +47,7 @@ void msgtest1Proc(int argc, void**argv){
 }
 
 void messageTest(int argc, char **argv){
-    printf("Running message test.\n");
+    printf("Running message test. Press '1' to run test and 'q' to quit.\n");
     char c;
     while(1){
       c = getchar();
