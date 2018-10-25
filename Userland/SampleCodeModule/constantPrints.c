@@ -34,6 +34,7 @@ void help()
     printf("             printPids (with cammelCase) if you like to print pids of processes\n");
     printf("              Write exceptionZero for trying our divZero exception catch\n");
     printf("              Write exceptionOpCode for trying our opCode exception catch\n");
+    printf("              Write setPriority 'pid' 'priority' to change the priority of a process\n");
     printf("                           If you want to exit, write exit\n");
     printf("                            \n");
     exitProcess();
