@@ -37,8 +37,8 @@ void help()
     printf("              Write setPriority 'pid' 'priority' to change the priority of a process\n");
     printf("              Write prod| cons if you like to see our resolution to prodcons problem with pipes\n");
     printf("              Write messageTest to see the message test\n");
-    printf("              Write pipeTest to see the pipe test\n");
-    printf("              Write mutexTest to see the mutex test\n");
+    printf("              Write pipeTest to see the pipe test, q to exit\n");
+    printf("              Write mutexTest to see the mutex test, q to exit\n");
     printf("              Write philosophers if you like to see our resolution to dining philosophers problem\n");
     printf("                           If you want to exit, write exit\n");
     printf("                            \n");
